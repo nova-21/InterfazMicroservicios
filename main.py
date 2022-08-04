@@ -46,7 +46,7 @@ for app in apps:
     if "iluminacion" in str(app):
         hostIluminacion=str(app).replace("<hostName>", "").replace("</hostName>", "")
         print(hostIluminacion)
-    if "control-aparatos" in str(app):
+    if "control-aparato" in str(app):
         hostControl = str(app).replace("<hostName>", "").replace("</hostName>", "")
         print(hostControl)
 
