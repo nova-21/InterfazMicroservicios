@@ -140,8 +140,8 @@ with alertas:
         disp=st.radio("Dispositivos",st.session_state['lista_dispositivos'],key="disp")
 
     if tiempoEspera:
-
-        url = 'https://'+hostControl+'/aparato/tiempo/'+str(tiempoEspera)
+        print(hostControl)
+        url = 'https://'+hostControl+'/'+disp+'/tiempo/'+str(tiempoEspera)
         x = requests.get(url)
         data = x.json()
         st.session_state['estadoAlerta'] = str(dict(data).get("accion"))
