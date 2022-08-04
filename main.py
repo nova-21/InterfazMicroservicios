@@ -150,6 +150,3 @@ with alertas:
             st.error("Apagar dispositivo por seguridad")
         else:
             st.success("Mantener encendido")
-
-
-
