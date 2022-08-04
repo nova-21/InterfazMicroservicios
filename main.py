@@ -2,6 +2,7 @@ import requests
 import streamlit as st
 from streamlit_tags import st_tags
 import json
+from bs4 import BeautifulSoup
 
 st.set_page_config(layout="wide")
 if 'temperatura' not in st.session_state:
@@ -27,6 +28,27 @@ st.title("Control automático del hogar")
 
 iluminacion,calefaccion,riego,alertas=st.tabs(["Iluminación", "Calefacción", "Riego", "Alertas"])
 
+url = 'http://52.73.98.2:8099/eureka/apps'
+
+document = requests.get(url)
+
+soup= BeautifulSoup(document.content,"lxml-xml")
+apps=soup.findAll("hostName")
+
+for app in apps:
+    if "calefaccion" in str(app):
+        hostCalefaccion=str(app).replace("<hostName>", "").replace("</hostName>", "")
+        print(hostCalefaccion)
+    if "riego" in str(app):
+        hostRiego=str(app).replace("<hostName>", "").replace("</hostName>", "")
+        print(hostRiego)
+    if "iluminacion" in str(app):
+        hostIluminacion=str(app).replace("<hostName>", "").replace("</hostName>", "")
+        print(hostIluminacion)
+    if "control-aparatos" in str(app):
+        hostControl = str(app).replace("<hostName>", "").replace("</hostName>", "")
+        print(hostControl)
+
 with iluminacion:
     st.subheader("Luces habitaciones")
 
@@ -49,7 +71,7 @@ with iluminacion:
             st.session_state['valoresLuz'][habitacion]=tuple(y)
 
         if lumens>=0:
-            url = 'https://iluminacion-webavanzada.herokuapp.com/iluminacion/'+habitacion+'/'+str(lumens)+'/'+str(hora)
+            url = 'https://'+hostIluminacion+'/iluminacion/'+habitacion+'/'+str(lumens)+'/'+str(hora)
             x = requests.post(url)
             st.session_state['iluminacion'] = json.loads(x.text)
 
@@ -78,7 +100,7 @@ with calefaccion:
             valor=st.slider("Cambia la temperatura",-30,30,key="temperatura")
 
         if valor:
-            url = 'https://calefaccion-service.herokuapp.com/temperatura/{}'.format(valor)
+            url = 'https://'+hostCalefaccion+'/temperatura/{}'.format(valor)
             x = requests.post(url)
             st.session_state['calefaccion'] = x.text
 
@@ -96,7 +118,7 @@ with riego:
             valor=st.slider("Cambia la humdedad",0,100,key="humedad")
 
         if valor:
-            url = 'https://riego-service1.herokuapp.com/riego/{}'.format(valor)
+            url = 'https://'+hostRiego+'/riego/{}'.format(valor)
             x = requests.post(url)
             st.session_state['estadoRiego'] = x.text
 
@@ -117,7 +139,7 @@ with alertas:
         disp=st.radio("Dispositivos",st.session_state['lista_dispositivos'],key="disp")
 
     if tiempoEspera:
-        url = 'https://be26-200-24-159-241.sa.ngrok.io/aparato/tiempo/{}'.format(tiempoEspera)
+        url = 'https://'+hostControl+'control-aparatos-service.herokuapp.com''/aparato/tiempo/{}'.format(tiempoEspera)
         x = requests.get(url)
         data = x.json()
         st.session_state['estadoAlerta'] = str(dict(data).get("accion"))
