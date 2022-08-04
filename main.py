@@ -141,7 +141,7 @@ with alertas:
 
     if tiempoEspera:
         print(hostControl)
-        url = 'https://'+hostControl+'/'+disp+'/tiempo/'+str(tiempoEspera)
+        url = 'https://'+hostControl+'/aparato/tiempo/'+str(tiempoEspera)
         x = requests.get(url)
         data = x.json()
         st.session_state['estadoAlerta'] = str(dict(data).get("accion"))
