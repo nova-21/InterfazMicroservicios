@@ -3,6 +3,7 @@ import streamlit as st
 from streamlit_tags import st_tags
 import json
 from bs4 import BeautifulSoup
+from lxml import etree
 
 st.set_page_config(layout="wide")
 if 'temperatura' not in st.session_state:
