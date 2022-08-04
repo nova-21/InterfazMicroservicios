@@ -140,7 +140,7 @@ with alertas:
         disp=st.radio("Dispositivos",st.session_state['lista_dispositivos'],key="disp")
 
     if tiempoEspera:
-        url = 'https://'+hostControl+'control-aparatos-service.herokuapp.com''/aparato/tiempo/{}'.format(tiempoEspera)
+        url = 'https://'+hostControl+'/aparato/tiempo/{}'.format(tiempoEspera)
         x = requests.get(url)
         data = x.json()
         st.session_state['estadoAlerta'] = str(dict(data).get("accion"))
